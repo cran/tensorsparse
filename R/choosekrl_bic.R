@@ -1,19 +1,19 @@
-#' Perform tuning parameter (\eqn{d_1}, \eqn{d_2}, \eqn{d_3}) selection for sparse tensor clustering via BIC criterion
+#' Select the clustering size for sparse tensor clustering via BIC
 #' 
-#' Select the best \eqn{d_1}, \eqn{d_2}, \eqn{d_3}  to perform clustering. A range of values of \eqn{d_1}, \eqn{d_2}, \eqn{d_3} is usually considered - value that results in the lowest BIC is selected.
+#' Select the clustering size for three-way clustering. The function searches over a range of clustering sizes and outputs the one that minimizes BIC. The clustering size (\eqn{d_1}, \eqn{d_2}, \eqn{d_3}) is a length-3 vector consisting of the number of clusters in each mode. 
 #' @param x a three-dimensional array
-#' @param k the range of \eqn{d_1}: a vector, the possible clusters numbers of mode 1
-#' @param r the range of \eqn{d_2}: a vector, the possible clusters numbers of mode 2
-#' @param l the range of \eqn{d_3}: a vector, the possible clusters numbers of mode 3
-#' @param lambda a numeric value. The coefficient of the regularization term.
-#' @param sim.times the simulation times when perform clustering of classify2() in label2().
-#' @param method two options: "L0", "L1". Two methods use different penalties, where "L0" indicating L0 penalty, "L1" indicating Lasso penalty.
-#' @param n.cores the number of cores 
+#' @param k a vector, the possible numbers of clusters at mode 1
+#' @param r a vector, the possible numbers of clusters at mode 2
+#' @param l a vector, the possible numbers of clusters at mode 3
+#' @param lambda a numeric value, regularization coefficient
+#' @param sim.times the number of simulation replicates when performing clustering
+#' @param method two options: "L0", "L1". "L0" indicates L0 penalty, and "L1" indicates Lasso penalty
+#' @param n.cores the number of cores in parallel implementation
 #' @return a list   
 #' 
-#' \code{estimated_krl} a 1*3 matrix which is the estimated c(d_1,d_2,d_3).   
+#' \code{estimated_krl} a 1*3 matrix consisting of the estimated clustering size  
 #' 
-#'                \code{BIC} a vector which contains the BIC values of all the combination of given range.  
+#' \code{BIC} a vector consisting of the BIC value for all combinations of clustering sizes 
 #' 
 #' @export
 
@@ -30,11 +30,11 @@ choosekrl_bic = function (x,k,r,l,lambda=0,sim.times=1,method="L0",n.cores=NULL)
   krl_list = as.list(as.data.frame(krl))
   if (.Platform$OS.type == "windows") {
     bires = apply(krl,MARGIN=2,label_for_krl,k,r,l,sim.times=sim.times,lambda=lambda,xmiss=x,method=method,crossvalidation=FALSE)
-    CBIC = lapply(bires,tensor.calculateBIC, x=x,method=method)
+    CBIC = lapply(bires,tensor_calculateBIC, x=x,method=method)
     BIC = unlist(CBIC)
   } else {
     bires = mclapply(krl_list, label_for_krl,k,r,l,sim.times=sim.times,lambda=lambda,xmiss=x,method=method,crossvalidation=FALSE,mc.cores=n.cores)
-    CBIC = mclapply(bires,tensor.calculateBIC, x=x,method=method,mc.cores = n.cores)
+    CBIC = mclapply(bires,tensor_calculateBIC, x=x,method=method,mc.cores = n.cores)
     BIC = unlist(CBIC)
   }
   names(BIC) = apply(krl,MARGIN=2,FUN=function(x)paste(k[x[1]],r[x[2]],l[x[3]]))

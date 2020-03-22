@@ -2,35 +2,43 @@
 % Please edit documentation in R/choosekrl_bic.R
 \name{choosekrl_bic}
 \alias{choosekrl_bic}
-\title{Perform tuning parameter (\eqn{d_1}, \eqn{d_2}, \eqn{d_3}) selection for sparse tensor clustering via BIC criterion}
+\title{Select the clustering size for sparse tensor clustering via BIC}
 \usage{
-choosekrl_bic(x, k, r, l, lambda = 0, sim.times = 1, method = "L0",
-  n.cores = NULL)
+choosekrl_bic(
+  x,
+  k,
+  r,
+  l,
+  lambda = 0,
+  sim.times = 1,
+  method = "L0",
+  n.cores = NULL
+)
 }
 \arguments{
 \item{x}{a three-dimensional array}
 
-\item{k}{the range of \eqn{d_1}: a vector, the possible clusters numbers of mode 1}
+\item{k}{a vector, the possible numbers of clusters at mode 1}
 
-\item{r}{the range of \eqn{d_2}: a vector, the possible clusters numbers of mode 2}
+\item{r}{a vector, the possible numbers of clusters at mode 2}
 
-\item{l}{the range of \eqn{d_3}: a vector, the possible clusters numbers of mode 3}
+\item{l}{a vector, the possible numbers of clusters at mode 3}
 
-\item{lambda}{a numeric value. The coefficient of the regularization term.}
+\item{lambda}{a numeric value, regularization coefficient}
 
-\item{sim.times}{the simulation times when perform clustering of classify2() in label2().}
+\item{sim.times}{the number of simulation replicates when performing clustering}
 
-\item{method}{two options: "L0", "L1". Two methods use different penalties, where "L0" indicating L0 penalty, "L1" indicating Lasso penalty.}
+\item{method}{two options: "L0", "L1". "L0" indicates L0 penalty, and "L1" indicates Lasso penalty}
 
-\item{n.cores}{the number of cores}
+\item{n.cores}{the number of cores in parallel implementation}
 }
 \value{
 a list   
 
-\code{estimated_krl} a 1*3 matrix which is the estimated c(d_1,d_2,d_3).   
+\code{estimated_krl} a 1*3 matrix consisting of the estimated clustering size  
 
-               \code{BIC} a vector which contains the BIC values of all the combination of given range.
+\code{BIC} a vector consisting of the BIC value for all combinations of clustering sizes
 }
 \description{
-Select the best \eqn{d_1}, \eqn{d_2}, \eqn{d_3}  to perform clustering. A range of values of \eqn{d_1}, \eqn{d_2}, \eqn{d_3} is usually considered - value that results in the lowest BIC is selected.
+Select the clustering size for three-way clustering. The function searches over a range of clustering sizes and outputs the one that minimizes BIC. The clustering size (\eqn{d_1}, \eqn{d_2}, \eqn{d_3}) is a length-3 vector consisting of the number of clusters in each mode.
 }

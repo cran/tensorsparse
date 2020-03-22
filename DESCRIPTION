@@ -1,18 +1,18 @@
 Package: tensorsparse
 Type: Package
 Title: Multiway Clustering via Tensor Block Models
-Version: 1.0
-Date: 2019-08-02
+Version: 2.0
+Date: 2020-03-20
 Author: Miaoyan Wang, Yuchen Zeng
 Maintainer: Yuchen Zeng <yzeng58@wisc.edu>
-Depends: glasso
-Imports: fields, glmnet, rgl, reshape, mvtnorm, HDCI, clues, parallel,
-        RColorBrewer, viridis, rTensor, methods
-Description: Implements the multiway sparse clustering approach of Zeng and Wang (2019) <arXiv:1906.03807>. 
+Imports: fields, glmnet, rgl, reshape, mvtnorm, HDCI, parallel,
+        RColorBrewer, viridis, methods, stats, utils
+Suggests: cluster
+Description: Implements the multiway sparse clustering approach of M. Wang and Y. Zeng, "Multiway clustering via tensor block models". Advances in Neural Information Processing System 32 (NeurIPS), 715-725, 2019.
 License: GPL (>= 2)
-NeedsCompilation: no
-Packaged: 2019-08-04 01:06:40 UTC; cengyuchen
+NeedsCompilation: yes
+Packaged: 2020-03-21 20:15:21 UTC; cengyuchen
 Repository: CRAN
-Date/Publication: 2019-08-05 13:40:02 UTC
-RoxygenNote: 6.1.1
+Date/Publication: 2020-03-22 07:10:02 UTC
+RoxygenNote: 7.0.0
 Encoding: UTF-8

@@ -1,18 +1,20 @@
-#' Perform tuning parameter (lambda) selection for sparse tensor clustering via BIC criterion
+#' Select the regularization coefficient for sparse tensor clustering via BIC
 #' 
-#' We assume that \eqn{d_1}, \eqn{d_2}, \eqn{d_3} are known. A range of values of lambda is usually considered - value that results in the lowest BIC is selected.
+#' Select the regularization coefficient for three-way clustering. The clustering size is assumed to be known. The function searches over a range of regularization sizes and outputs the one that minimizes the BIC.
 #' @param x a three-dimensional array
-#' @param k \eqn{d_1}: the clusters number of mode 1
-#' @param r \eqn{d_2}: the clusters number of mode 2
-#' @param l \eqn{d_3}: the clusters number of mode 3
-#' @param lambda a vector of possible lambda, eg: lambda = c(0,50,100,200,300,400,500,600,700,800,900,1000,1100,1200).
-#' @param method two options: "L0", "L1". Two methods use different penalties, where "L0" indicating L0 penalty and "L1" indicating Lasso penalty.
+#' @param k an positive integer, the numbers of clusters at mode 1
+#' @param r an positive integer, the numbers of clusters at mode 2
+#' @param l an positive integer, the numbers of clusters at mode 3
+#' @param lambda a vector of possible lambda, eg: lambda = c(0,50,100,200)
+#' @param method two options: "L0", "L1". "L0" indicates L0 penalty, and "L1" indicates Lasso penalty
 #' @return a list   
-#'                \code{lambda} the lambda with lowest BIC;  
 #' 
-#'                \code{BIC} the corresponding BIC for each lambda in the given range;  
+#' 
+#'                \code{lambda} the lambda with lowest BIC
+#' 
+#'                \code{BIC} the BIC for each lambda in the given range
 #'                
-#'                \code{nonzeromus} the number clusters with non-zero mean.
+#'                \code{nonzeromus} the number of clusters with non-zero means
 #'   
 #' @export
 chooseLambda = function (x, k, r, l, lambda=NULL,method="L0") {
@@ -25,12 +27,12 @@ chooseLambda = function (x, k, r, l, lambda=NULL,method="L0") {
   } 
   if (.Platform$OS.type == "windows") {
     bires = lapply(lambda,FUN=classify2,x=x,k=k,r=r,l=l,method=method)
-    CBIC = lapply(bires,tensor.calculateBIC, x=x,method=method)
+    CBIC = lapply(bires,tensor_calculateBIC, x=x,method=method)
     BIC = unlist(CBIC)
     nonzero = unlist(lapply(bires, FUN=function(bires){return(sum(bires$mus!=0))}))
   } else {
     bires = mclapply(lambda,FUN=classify2,x=x,k=k,r=r,l=l,method=method,mc.cores = n.cores)
-    CBIC = mclapply(bires,tensor.calculateBIC, x=x,method=method,mc.cores = n.cores)
+    CBIC = mclapply(bires,tensor_calculateBIC, x=x,method=method,mc.cores = n.cores)
     BIC = unlist(CBIC)
     nonzero = unlist(mclapply(bires, FUN=function(bires){return(sum(bires$mus!=0))},mc.cores = n.cores))
   }

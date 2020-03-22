@@ -1,0 +1,5 @@
+March, 2020
+	(1) fixed the dependency issues on rTensor
+	(2) revised documentations
+	(3) fixed the dependency issue on orphaned package: clue
+	(4) fixed "No protocol specified" problem
