@@ -33,8 +33,8 @@
 #' @export
 #' @examples 
 #' 
-#' get_data(20,20,20,2,2,2)$x
-get_data = function(n,p,q,k=NULL,r=NULL,l=NULL,error=3,sort=TRUE,sparse.percent=0,center=FALSE,seed=NULL,mumin = -3, mumax = 3){#multiplicative=0,
+#' getOrder3Tensor(20,20,20,2,2,2)$x
+getOrder3Tensor = function(n,p,q,k=NULL,r=NULL,l=NULL,error=3,sort=TRUE,sparse.percent=0,center=FALSE,seed=NULL,mumin = -3, mumax = 3){#multiplicative=0,
   if(!is.null(seed)) set.seed(seed)
   #if(multiplicative == 0){
     mus = runif(k*r*l,mumin,mumax)#take the mean of k*r*l biclusters/cubes

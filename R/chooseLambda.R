@@ -1,4 +1,4 @@
-#' Select the regularization coefficient for sparse tensor clustering via BIC
+#' Select the regularization coefficient for order-3 sparse tensor clustering via BIC
 #' 
 #' Select the regularization coefficient for three-way clustering. The clustering size is assumed to be known. The function searches over a range of regularization sizes and outputs the one that minimizes the BIC.
 #' @param x a three-dimensional array

@@ -1,4 +1,4 @@
-#' Select the clustering size for sparse tensor clustering via BIC
+#' Select the clustering size for order-3 sparse tensor clustering via BIC
 #' 
 #' Select the clustering size for three-way clustering. The function searches over a range of clustering sizes and outputs the one that minimizes BIC. The clustering size (\eqn{d_1}, \eqn{d_2}, \eqn{d_3}) is a length-3 vector consisting of the number of clusters in each mode. 
 #' @param x a three-dimensional array
@@ -17,7 +17,7 @@
 #' 
 #' @export
 
-choosekrl_bic = function (x,k,r,l,lambda=0,sim.times=1,method="L0",n.cores=NULL){
+chooseClusteringSize = function (x,k,r,l,lambda=0,sim.times=1,method="L0",n.cores=NULL){
   #k = 2:5;r=2:5;l=2:5;lambda=0;sim.times=1;method="L0"
     ## x = x - mean(x) ## commented out
   if (sum(diff(k) <= 0) > 0 || sum(diff(r) <= 0) > 0 || sum(diff(l) <= 0) > 0) 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/chooseLambda.R
 \name{chooseLambda}
 \alias{chooseLambda}
-\title{Select the regularization coefficient for sparse tensor clustering via BIC}
+\title{Select the regularization coefficient for order-3 sparse tensor clustering via BIC}
 \usage{
 chooseLambda(x, k, r, l, lambda = NULL, method = "L0")
 }

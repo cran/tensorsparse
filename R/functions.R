@@ -127,10 +127,10 @@ label_for_krl = function(abc,k,r,l,Cs.init=NULL,Ds.init=NULL,Es.init=NULL,sim.ti
   if(is.null(Ds.init) == FALSE) Ds.init = Ds.init[,b]
   if(is.null(Es.init) == FALSE) Es.init = Es.init[,c]
   if (crossvalidation == TRUE){
-    return(list(tbm_clustering(xmiss, k[a], r[b], l[c], lambda = lambda, 
+    return(list(tbmClustering(xmiss, k[a], r[b], l[c], lambda = lambda, 
                        Cs.init = Cs.init, Ds.init = Ds.init, 
                        Es.init = Es.init, sim.times=sim.times, method=method)$judgeX))} else {
-                         return(tbm_clustering(xmiss, k[a], r[b], l[c], lambda = lambda, 
+                         return(tbmClustering(xmiss, k[a], r[b], l[c], lambda = lambda, 
                                        Cs.init = Cs.init, Ds.init = Ds.init, 
                                        Es.init = Es.init, sim.times=sim.times, method=method))
                        }
@@ -543,23 +543,25 @@ cer = function(bires,data){
 # @param tensor a three-dimensional array
 # @return None
 
-plot_tensor=function(tensor){
-  
-  
-  n=prod(dim(tensor))   
-  color_choice=min(round(prod(dim(tensor))/(6*6*6)),100)+1
-  marker=viridis_pal(option = "B")(color_choice)
-  
-  position=positionfun(dim(tensor))$position
-  quan=c(quantile(tensor,(0:color_choice)/color_choice))
-  col=tensor
-  for(i in 1:color_choice){
-    col[(tensor>=quan[i])&(tensor<=quan[i+1])]=marker[i]
-  }
-  col[tensor==quan[i+1]]=marker[i]
-  
-  plot3d(position[,1],position[,2],position[,3],col=col,alpha=0.3,size=5,xlab="",ylab="",zlab="")
-}
+
+#require two packages: rgl and viridis
+# plot_tensor=function(tensor){
+#   
+#   
+#   n=prod(dim(tensor))   
+#   color_choice=min(round(prod(dim(tensor))/(6*6*6)),100)+1
+#   marker=viridis_pal(option = "B")(color_choice)
+#   
+#   position=positionfun(dim(tensor))$position
+#   quan=c(quantile(tensor,(0:color_choice)/color_choice))
+#   col=tensor
+#   for(i in 1:color_choice){
+#     col[(tensor>=quan[i])&(tensor<=quan[i+1])]=marker[i]
+#   }
+#   col[tensor==quan[i+1]]=marker[i]
+#   
+#   plot3d(position[,1],position[,2],position[,3],col=col,alpha=0.3,size=5,xlab="",ylab="",zlab="")
+# }
 
 
 # Perform simulation: selecting the best \eqn{d_1}, \eqn{d_2} and \eqn{d_3}
@@ -585,15 +587,15 @@ sim_choosekrl <- function(n,p,q,k,r,l,error=1,sim.times=5,method="L0",mode="bic"
     for(a in 1:sim.times){
       cat("Starting", a, fill=TRUE)
       if(seed == TRUE) set.seed(a)
-      x = get_data(n,p,q,k,r,l,error=error)$x
-      classification[[a]]<-choosekrl_bic(x,k=2:5,r=2:5,l=2:5,method=method)$estimated_krl#estimate clusters
+      x = getOrder3Tensor(n,p,q,k,r,l,error=error)$x
+      classification[[a]]<-chooseClusteringSize(x,k=2:5,r=2:5,l=2:5,method=method)$estimated_krl#estimate clusters
     }
   }
   if(mode == "crossvalidation"){
     for(a in 1:sim.times){
       cat("Starting", a, fill=TRUE)
       if(seed == TRUE) set.seed(a)
-      x = get_data(n,p,q,k,r,l,error=error)$x
+      x = getOrder3Tensor(n,p,q,k,r,l,error=error)$x
       classification[[a]]<-sparse_choosekrl(x,k=2:5,r=2:5,l=2:5,method=method)$estimated_krl#estimate clusters
     }
   }
@@ -624,7 +626,7 @@ sim_chooseLambda = function(n,p,q,k,r,l,sparse,iteration,lambda,standarddeviatio
   for(iter in 1:iteration){
     cat("Iteration",iter,fill=TRUE)
     set.seed(iter)
-    smp = get_data(n,p,q,k,r,l,error=standarddeviation,sort=FALSE,sparse.percent = sparse)$x
+    smp = getOrder3Tensor(n,p,q,k,r,l,error=standarddeviation,sort=FALSE,sparse.percent = sparse)$x
     if(center == TRUE)smp = smp - mean(smp)
     selectedLambda[iter] = chooseLambda(smp,k,r,l,lambda=lambda,method=method)$lambda
   }
@@ -650,7 +652,7 @@ simulation  = function(n,p,q,k,r,l,error,lambda,iteration=1,method="L0"){
   cer = c()
   for (i in 1:iteration){
     set.seed(i)
-    data = get_data(n,p,q,k,r,l,error=error)
+    data = getOrder3Tensor(n,p,q,k,r,l,error=error)
     test = data$x
     truthCs = data$truthCs
     truthDs = data$truthDs
@@ -677,7 +679,7 @@ simulation  = function(n,p,q,k,r,l,error,lambda,iteration=1,method="L0"){
 # @param percent a numeric value between 0 and 1
 # @param trace  trace logic value. If true, it would print the iteration situation.
 # @param nstart positive interger. The same as the "nstart" in kmeans().
-# @param sim.times the same as tbm_clustering(): the times of calling classify2() with different seeds.
+# @param sim.times the same as tbmClustering(): the times of calling classify2() with different seeds.
 # @param method two options: "L0", "L1". Two methods use different penalties, where "L0" indicating L0 penalty and "L1" indicating Lasso penalty.
 # @return a list   
 # \code{estimated_krl} a 1*3 matrix which is the estimated c(d_1,d_2,d_3).  
@@ -793,8 +795,8 @@ sparse_choosekrl = function (x,k,r,l,lambda=0,percent=0.2,trace=FALSE,nstart=20,
 # Evaluate the accuracy of clustering result
 # 
 # Given the input tensor, perform tensor clustering and evaluate the accuracy of the clustering result. 
-# @param bires the return value of tbm_clustering()
-# @param data the return value of get_data()
+# @param bires the return value of tbmClustering()
+# @param data the return value of getOrder3Tensor()
 # @param CER logic value. If true, it would return CER also
 # @param show logic value. If true, it would print the result
 # @return a list:
@@ -846,7 +848,7 @@ sparse_evaluate = function(bires, data, CER=TRUE, show=TRUE){
 # 
 # Given the clustering result, calculate the BIC.
 # @param x a three-dimensional array
-# @param clusterobj the return object of tbm_clustering() or classify2()
+# @param clusterobj the return object of tbmClustering() or classify2()
 # @param method two options: "L0", "L1". Two methods use different penalties, where "L0" indicating L0 penalty, "L1" indicating Lasso penalty.
 # @param apply "main": apply in the main formula; "cp": apply in the CPD k-means.
 # @return a vector [1]BIC, [2]nonzeromus

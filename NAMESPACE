@@ -1,29 +1,17 @@
 useDynLib(tensorsparse, .registration = TRUE)
 
-importFrom("methods", "new")
-import(RColorBrewer)
-import(viridis)
-
-import(fields)
-import(glmnet)
-import(rgl)
-import(reshape)
-import(mvtnorm)
-import(HDCI)
 import(parallel)
-importFrom("grDevices", "dev.new", "heat.colors")
-importFrom("graphics", "axis", "image", "title")
 importFrom("stats", "kmeans", "sd")
 importFrom("stats", "rnorm", "runif")
 importFrom("stats", "quantile")
 
 # functions
 export(
-	tbm_clustering,
-	get_data,
+	tbmClustering,
+	getOrder3Tensor,
 	chooseLambda,
-	choosekrl_bic,
-	get_data4
+	chooseClusteringSize,
+	getOrder4Tensor
 )
 
 

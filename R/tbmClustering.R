@@ -29,13 +29,13 @@
 #'                
 #' @export
 #' @examples
-#' x = get_data(20,20,20,2,2,2)$x
-#' tbm_clustering(x,2,2,2)
+#' x = getOrder3Tensor(20,20,20,2,2,2)$x
+#' tbmClustering(x,2,2,2)
 #' 
 #' @references {M. Wang and Y. Zeng, "Multiway clustering via tensoe block models". Advances in Neural Information Processing System 32 (NeurIPS), 715-725, 2019.}
 #' @author Yuchen Zeng \email{yzeng58@@wisc.edu}
 #' 
-tbm_clustering = function(x,k,r,l,lambda=0,max.iter=1000,threshold = 1e-10,sim.times=1,trace=FALSE,Cs.init=NULL,Ds.init=NULL,Es.init=NULL,method="L0"){
+tbmClustering = function(x,k,r,l,lambda=0,max.iter=1000,threshold = 1e-10,sim.times=1,trace=FALSE,Cs.init=NULL,Ds.init=NULL,Es.init=NULL,method="L0"){
   #x=test;lambda=1e-3;max.iter=200;threshold = 5e-3;sim.times=10
   if (sim.times == 1) return(classify2(x,k,r,l,lambda=lambda,max.iter = max.iter,threshold = threshold,Cs.init = Cs.init,Ds.init = Ds.init,Es.init = Es.init,method=method))
   if (.Platform$OS.type == "windows") {

@@ -3,3 +3,9 @@ March, 2020
 	(2) revised documentations
 	(3) fixed the dependency issue on orphaned package: clue
 	(4) fixed "No protocol specified" problem
+
+September, 2020
+	(1) removed redundant packages
+	(2) renamed the functions to more informative names
+	(3) revised documentations 
+	(4) fixed "'rgl.init' failed" warning

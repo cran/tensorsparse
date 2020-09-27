@@ -36,8 +36,9 @@
 #'            
 #' @export
 #' 
-#' get_data4(10,10,10,10,2,2,2,2)
-get_data4 = function(n,p,q,s,k=NULL,r=NULL,l=NULL,m=NULL,error=3,sort=TRUE,sparse.percent=0,center=FALSE,seed=NULL,mumin = -3, mumax = 3){
+#' @examples 
+#' getOrder4Tensor(10,10,10,10,2,2,2,2)
+getOrder4Tensor = function(n,p,q,s,k=NULL,r=NULL,l=NULL,m=NULL,error=3,sort=TRUE,sparse.percent=0,center=FALSE,seed=NULL,mumin = -3, mumax = 3){
   if(!is.null(seed)) set.seed(seed)
   #print(m)
   mus = runif(k*r*l*m,mumin,mumax)#take the mean of k*r*l biclusters/cubes
